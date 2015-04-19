@@ -1,2 +1,5 @@
 *.in
 *.out
+*.class
+*.iml
+out/
