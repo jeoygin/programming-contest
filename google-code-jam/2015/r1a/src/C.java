@@ -115,18 +115,6 @@ public class C {
             this.data = data;
         }
 
-        boolean check(List<Point> list, Point p) {
-            if (list.size() == 0) {
-                return true;
-            }
-            double[] ang = new double[list.size()];
-            for (int i = 0; i < list.size(); i++) {
-                ang[i] = Math.atan2(list.get(i).y - p.y, list.get(i).x - p.y);
-            }
-            Arrays.sort(ang);
-            return ang[ang.length-1] - ang[0] <= Math.PI + 0.00000001;
-        }
-
         @Override
         public void run() {
             int n = data.n;
@@ -158,7 +146,6 @@ public class C {
 
                 data.ans[i] = min;
             }
-
         }
     }
 
