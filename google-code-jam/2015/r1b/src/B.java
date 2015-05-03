@@ -1,7 +1,6 @@
 import java.io.BufferedInputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -103,35 +102,55 @@ public class B {
         public void run() {
             int r = data.r, c = data.c, n = data.n;
             data.ans = Integer.MAX_VALUE;
-            for (int m = (1 << (r * c)) - 1; m >= 0; m--) {
+            for (int k = 0; k <= 1; k++) {
                 boolean[][] grid = new boolean[r][c];
-                int cnt = 0;
-                for (int i = r * c - 1; i >= 0; i--) {
-                    if ((m & (1 << i)) > 0) {
-                        grid[i / c][i % c] = true;
-                        cnt++;
-                    }
-                }
-                if (cnt == n) {
-                    int unhappiness = 0;
-                    for (int i = 0; i < r; i++) {
-                        for (int j = 0; j < c; j++) {
-                            if (grid[i][j]) {
-                                if (j > 0 && grid[i][j-1]) {
-                                    unhappiness++;
-                                }
-                                if (i > 0 && grid[i-1][j]) {
-                                    unhappiness++;
-                                }
-                            }
+                int left = n;
+                for (int i = 0; i < r && left > 0; i++) {
+                    for (int j = 0; j < c && left > 0; j++) {
+                        if (i + j == k) {
+                            continue;
+                        }
+                        if ((i == 0 || !grid[i - 1][j]) && (j == 0 || !grid[i][j - 1])) {
+                            grid[i][j] = true;
+                            left--;
                         }
                     }
-                    data.ans = Math.min(data.ans, unhappiness);
                 }
+                data.ans = Math.min(data.ans, getUnhapiness(grid, r, c, left));
             }
         }
 
+        int getUnhapiness(boolean[][] grid, int r, int c, int left) {
+            int res = 0;
+            List<Integer> unhappiness = new ArrayList<Integer>();
+            for (int i = 0; i < r; i++) {
+                for (int j = 0; j < c; j++) {
+                    if (grid[i][j]) {
+                        continue;
+                    }
+                    int up = 0;
+                    if (i > 0 && grid[i-1][j]) {
+                        up++;
+                    }
+                    if (i + 1 < r && grid[i+1][j]) {
+                        up++;
+                    }
+                    if (j > 0 && grid[i][j-1]) {
+                        up++;
+                    }
+                    if (j + 1 < c && grid[i][j+1]) {
+                        up++;
+                    }
+                    unhappiness.add(up);
+                }
+            }
+            Collections.sort(unhappiness);
 
+            for (int i = 0; i < left; i++) {
+                res += unhappiness.get(i);
+            }
+            return res;
+        }
     }
 
     static class SingleThread {
