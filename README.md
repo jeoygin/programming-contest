@@ -1,3 +1,3 @@
-# programming-context
-All kinds of programming context code
+# programming-contest
+All kinds of programming contest code
 
